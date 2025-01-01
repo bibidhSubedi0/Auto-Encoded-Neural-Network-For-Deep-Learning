@@ -27,6 +27,9 @@
     <ClInclude Include="Network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Training.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Neuron.cpp">
@@ -46,6 +49,9 @@
     </ClCompile>
     <ClCompile Include="TotalNetwork.h">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Training.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

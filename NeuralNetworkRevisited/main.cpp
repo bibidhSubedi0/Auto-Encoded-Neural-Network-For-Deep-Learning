@@ -1,31 +1,48 @@
-#include "TotalNetwork.h"
+#include "Training.h"
+#include <fstream>
 using namespace std;
 
 
 int main()
 {
-	vector<int> topology = { 3,4,3 };
-	NN* Network = new NN(topology, 0.1);
+	vector<vector<double>> inputs{
+	{1,0,0,0}, {1,0,0,1}, {1,0,1,0}, {1,0,1,1},
+	{1,1,0,0}, {1,1,0,1}, {1,1,1,0}, {1,1,1,1},
+	 {0,0,0,1}, {0,0,1,0}, {0,0,1,1},
+	{0,1,0,0}, {0,1,0,1}, {0,1,1,0}, {0,1,1,1}
+	};
+	vector<vector<double>> targets{
+	{1,0,0,0}, {1,0,0,1}, {1,0,1,0}, {1,0,1,1},
+	{1,1,0,0}, {1,1,0,1}, {1,1,1,0}, {1,1,1,1},
+	 {0,0,0,1}, {0,0,1,0}, {0,0,1,1},
+	{0,1,0,0}, {0,1,0,1}, {0,1,1,0}, {0,1,1,1}
+	};
 
-	Network->setCurrentInput({ 1,0,1 });
-	Network->setTarget({ 1,0,1 });
+	vector<double> learning_rates = { 0.01 };// { 0.01, 0.1, , 1 };
+	vector<vector<int>> topologies = { { 4,8,8,4 } }; // { {4, 8, 4}, { 4,8,16,8,4 },  };
+
+	Training* t = new Training(inputs, targets, learning_rates, topologies,1500);
+	t->train_Network();
 
 
+	Network* best_network = t->get_best_network();
+	double best_lr = t->get_best_lr();
+	vector<int> best_topology = t->get_best_topology();
 
-	for(int epochs =0;epochs<100;epochs++){
-		Network->forwardPropogation();
+	cout << "Best Learning Rate : " << best_lr << endl;
+	cout << "Best Topology : ";
+	for (auto tp : best_topology) { cout << tp << " ";}
+	cout << endl;
 
+	for (int j = 0; j < inputs.size(); j++)
+	{
+		best_network->setCurrentInput(inputs[j]);
+		best_network->setTarget(inputs[j]);
 
-		Network->setErrors();
-		
-		vector<Matrix* > grad = Network->gardientComputation();
-		vector<vector<Matrix*>> allGradientsInOneEpoch;
-		allGradientsInOneEpoch.push_back(grad);
-		vector<Matrix*> avgG = Network->averageGradients(allGradientsInOneEpoch);
-	
-		Network->updateWeights();
+		best_network->forwardPropogation();
+		best_network->printToConsole();
+		cout << endl;
+		cout << "-------------------------------------------------" << endl;
 	}
-
-	Network->printToConsole();
 
 }

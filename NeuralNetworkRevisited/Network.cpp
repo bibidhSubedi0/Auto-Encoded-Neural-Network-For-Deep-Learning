@@ -5,7 +5,7 @@
 #include <fstream>
 
 
-NN::NN(vector<int> topology, double lr)
+Network::Network(vector<int> topology, double lr)
 {
     this->learningRate = lr;
     this->topology = topology;
@@ -42,17 +42,17 @@ NN::NN(vector<int> topology, double lr)
 }
 
 
-double NN::getGlobalError()
+double Network::getGlobalError()
 {
     return this->error;
 }
 
-double NN::lastEpoachError()
+double Network::lastEpoachError()
 {
     return histErrors[histErrors.size() - 1];
 }
 
-void NN::printHistErrors()
+void Network::printHistErrors()
 {
     cout << "\n Printing Errors from all epochs:" << endl;
     for (int i = 0; i < this->histErrors.size(); i++)
@@ -61,7 +61,7 @@ void NN::printHistErrors()
     }
 }
 
-void NN::saveHistErrors()
+void Network::saveHistErrors()
 {
     ofstream outFile("error_vs_epoch.csv");
 
@@ -82,24 +82,24 @@ void NN::saveHistErrors()
     }
 }
 
-vector<double> NN::gethisterrors()
+vector<double> Network::gethisterrors()
 {
     return histErrors;
 }
 
-double NN::getLearningRate()
+double Network::getLearningRate()
 {
     return learningRate;
 }
 
 
 
-void NN::setTarget(vector<double> target)
+void Network::setTarget(vector<double> target)
 {
     this->target = target;
 }
 
-void NN::printErrors()
+void Network::printErrors()
 {
     // cout<<"This Iteration Error"<<endl;
     // for(auto err : this->errors)
@@ -118,7 +118,7 @@ void NN::printErrors()
     cout << "Total Error : " << this->error << endl;
 }
 
-void NN::setCurrentInput(vector<double> input)
+void Network::setCurrentInput(vector<double> input)
 {
     this->input = input;
 
@@ -128,7 +128,7 @@ void NN::setCurrentInput(vector<double> input)
     }
 }
 
-void NN::printToConsole()
+void Network::printToConsole()
 {
     // Print the inputs to the network
     for (int i = 0; i < input.size(); i++)
@@ -144,12 +144,12 @@ void NN::printToConsole()
     }
 }
 
-Layer* NN::GetLayer(int nth)
+Layer* Network::GetLayer(int nth)
 {
     return layers[nth];
 }
 
-void NN::printWeightMatrices()
+void Network::printWeightMatrices()
 {
     for (int i = 0; i < weightMatrices.size(); i++)
     {
@@ -159,7 +159,7 @@ void NN::printWeightMatrices()
     }
 }
 
-void NN::forwardPropogation()
+void Network::forwardPropogation()
 {
     for (int i = 0; i < layers.size() - 1; i++)
     {
@@ -167,7 +167,7 @@ void NN::forwardPropogation()
     }
 }
 
-void NN::printBiases()
+void Network::printBiases()
 {
     for (int i = 0; i < weightMatrices.size(); i++)
     {
@@ -179,7 +179,7 @@ void NN::printBiases()
 
 
 
-void NN::setErrors()
+void Network::setErrors()
 {
     if (this->target.size() == 0)
     {
@@ -231,12 +231,12 @@ void NN::setErrors()
 
 
 
-void NN::saveThisError(double error)
+void Network::saveThisError(double error)
 {
     this->histErrors.push_back(error);
 }
 
-vector<Matrix*> NN::gardientComputation()
+vector<Matrix*> Network::gardientComputation()
 {
 
     Matrix* gradients;
@@ -299,7 +299,7 @@ vector<Matrix*> NN::gardientComputation()
 
 
 
-void NN::updateWeights()
+void Network::updateWeights()
 {
     vector<Matrix*> newWeights;
     Matrix* deltaWeights;
@@ -436,7 +436,7 @@ void NN::updateWeights()
 
 
 
-vector<Matrix*> NN::averageGradients(vector<vector<Matrix*>> accgrad)
+vector<Matrix*> Network::averageGradients(vector<vector<Matrix*>> accgrad)
 {
     size_t numColumns = accgrad[0].size();
     vector<Matrix*> averageMatrices(numColumns, nullptr);

@@ -25,7 +25,7 @@ Matrix::Matrix(int numRows, int numCols, bool isRandom = true)
 double Matrix::genRandomNumber()
 {
     std::random_device rd;
-    std::mt19937 gen(rd()); // Mersenne Twister 19937 generator seeded with rd
+    std::mt19937 gen(rd()); // MerseNetworke Twister 19937 generator seeded with rd
 
     // Define the distribution for floating point numbers between 0 and 1
     std::uniform_real_distribution<float> dis(0.3f, 0.7f);

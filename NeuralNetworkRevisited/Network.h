@@ -1,5 +1,5 @@
-#ifndef _NN_HPP_
-#define _NN_HPP_
+#ifndef _Network_HPP_
+#define _Network_HPP_
 
 #include <iostream>
 #include "Matrix.h"
@@ -7,10 +7,10 @@
 #include <vector>
 using namespace std;
 
-class NN
+class Network
 {
 public:
-    NN(vector<int> topology, double learningRate);
+    Network(vector<int> topology, double learningRate);
     void setCurrentInput(vector<double> input);
     void printToConsole();
     void printWeightMatrices();
