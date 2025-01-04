@@ -1,4 +1,5 @@
 #include "Training.h"
+#include <fstream>
 
 Training::Training(vector<vector<double>> inputs, vector<vector<double>> outputs, vector<double> learning_rates, vector<vector<int>>topologies, int epoch) :inputs(inputs), outputs(outputs), learning_Rates(learning_rates), topologies(topologies),epoch(epoch){}
 
@@ -18,15 +19,6 @@ void Training::train_Network()
 		{
 			for (int topologies_indx = 0; topologies_indx < this->topologies.size(); topologies_indx++)
 			{
-
-
-
-
-
-
-
-
-
 
 
 
@@ -53,7 +45,7 @@ void Training::train_Network()
 						// Net = fit_Network(this->inputs[j], this->outputs[j], this->learning_Rates[learning_Rates_idx], this->topologies[topologies_indx]);
 
 						Net->setCurrentInput(this->inputs[j]);
-						Net->setTarget(this->inputs[j]);
+						Net->setTarget(this->outputs[j]);
 
 						Net->forwardPropogation();
 						Net->setErrors();
@@ -67,6 +59,7 @@ void Training::train_Network()
 						Net->updateWeights();
 					}
 					avg_error_over_epoch.push_back(error_for_epoch / 7);
+
 				}
 
 				// Checking for best network
@@ -76,6 +69,16 @@ void Training::train_Network()
 					best.lr = learning_Rates[learning_Rates_idx];
 					best.Net = Net;
 				}
+
+				std::ofstream outFile("error_over_epoch.csv");
+				if (outFile.is_open()) {
+					for (double error : avg_error_over_epoch) {
+						outFile << error << "\n";
+					}
+					outFile.close();
+				}
+
+
 
 
 

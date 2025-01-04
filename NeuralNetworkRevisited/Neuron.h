@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include<vector>
 using namespace std;
 
 class Neuron
@@ -16,6 +17,7 @@ public:
     void Derive();
     void ActivateFinal();
     void DeriveFinal();
+    void ActivateSoftmax(std::vector<Neuron*>);
 
     // Getter
     double getVal() { return this->val;}

@@ -34,7 +34,7 @@ Network::Network(vector<int> topology, double lr)
         Matrix* mw = new Matrix(topology[i], topology[i + 1], true);
         this->weightMatrices.push_back(mw);
 
-        Matrix* mb = new Matrix(1, topology[i + 1], false);
+        Matrix* mb = new Matrix(1, topology[i + 1], true);
         this->BaisMatrices.push_back(mb);
     }
 
@@ -125,6 +125,8 @@ void Network::setCurrentInput(vector<double> input)
     for (int i = 0; i < input.size(); i++)
     {
         this->layers[0]->setVal(i, input[i]);
+        this->layers[0]->getNeuron(i)->Activate();
+        this->layers[0]->getNeuron(i)->Derive();
     }
 }
 
@@ -302,12 +304,14 @@ vector<Matrix*> Network::gardientComputation()
 void Network::updateWeights()
 {
     vector<Matrix*> newWeights;
+    vector<Matrix*> newBiases;
     Matrix* deltaWeights;
     Matrix* gradients;
 
     Matrix* gradientsTransposed;
     Matrix* PreviousLayerActivatedVals;
     Matrix* tempNewWeights;
+    Matrix* tempNewBiases;
     Matrix* lastGradient;
     Matrix* tranposedWeightMatrices;
     Matrix* hiddenDerived;
@@ -343,13 +347,34 @@ void Network::updateWeights()
         }
     }
 
+    // Update biases
+    tempNewBiases = new Matrix(
+        1, // Bias is a row vector
+        this->topology.at(outputLayerIndex),
+        false);
+
+    for (int c = 0; c < this->topology.at(outputLayerIndex); c++)
+    {
+        double originalBias = this->BaisMatrices.at(outputLayerIndex - 1)->getVal(0, c);
+        double deltaBias = gradients->getVal(0, c); // Gradient for bias
+        deltaBias = this->learningRate * deltaBias;
+
+        tempNewBiases->setVal(0, c, (originalBias - deltaBias));
+    }
+    newBiases.push_back(new Matrix(*tempNewBiases));
+
+
     newWeights.push_back(new Matrix(*tempNewWeights));
     delete gradientsTransposed;
     delete PreviousLayerActivatedVals;
     delete tempNewWeights;
+    delete tempNewBiases;
     delete deltaWeights;
 
+
+
     int gmctr = 1;
+
     for (int i = (outputLayerIndex - 1); i > 0; i--)
     {
         lastGradient = new Matrix(*gradients);
@@ -397,6 +422,7 @@ void Network::updateWeights()
             this->weightMatrices.at(i - 1)->getNumCols(),
             false);
 
+        // Update weights
         for (int r = 0; r < tempNewWeights->getNumRow(); r++)
         {
             for (int c = 0; c < tempNewWeights->getNumCols(); c++)
@@ -409,15 +435,32 @@ void Network::updateWeights()
                 tempNewWeights->setVal(r, c, (originalValue - deltaValue));
             }
         }
-
         newWeights.push_back(new Matrix(*tempNewWeights));
 
+        // Update biases
+        tempNewBiases = new Matrix(
+            1, // Bias is a row vector
+            gradients->getNumCols(),
+            false);
+
+        for (int c = 0; c < gradients->getNumCols(); c++)
+        {
+            double originalBias = this->BaisMatrices.at(i - 1)->getVal(0, c);
+            double deltaBias = gradients->getVal(0, c);
+            deltaBias = this->learningRate * deltaBias;
+
+            tempNewBiases->setVal(0, c, (originalBias - deltaBias));
+        }
+        newBiases.push_back(new Matrix(*tempNewBiases));
+
+        // Clean up
         delete lastGradient;
         delete tranposedWeightMatrices;
         delete hiddenDerived;
         delete PreviousLayerActivatedVals;
         delete transposedHidden;
         delete tempNewWeights;
+        delete tempNewBiases;
         delete deltaWeights;
     }
     delete gradients;

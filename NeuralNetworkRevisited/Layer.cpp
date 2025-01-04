@@ -90,7 +90,7 @@ Layer* Layer::feedForward(Matrix* Weights, Matrix* bias, bool isFirst, bool isLa
         
         return temp;
     }
-    else
+    else // Last ho vane
     {   
         Layer* temp = new Layer(Weights->getNumCols(),1);
 

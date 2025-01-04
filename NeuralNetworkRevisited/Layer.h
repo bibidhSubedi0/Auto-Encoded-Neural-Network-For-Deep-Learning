@@ -10,7 +10,8 @@ using namespace std;
 class Layer
 {
 public:
-
+    
+    // Constructor for 
     Layer(int size);
     Layer(int size,bool last);
     void setVal(int index, double val);
@@ -22,7 +23,6 @@ public:
     vector<Neuron*> getNeurons();
     Neuron* getNeuron(int);
     int getSize();
-    // Use weightMatrix to calculate Value at that Layer
 
 
 private:
