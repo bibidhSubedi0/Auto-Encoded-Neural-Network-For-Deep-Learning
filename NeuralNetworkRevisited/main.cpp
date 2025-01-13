@@ -33,9 +33,9 @@ int main()
 	};*/
 
 	vector<double> learning_rates = { 0.01 };// { 0.01, 0.1, , 1 };
-	vector<vector<int>> topologies = { { (int)inputs[0].size(),8,(int)targets[0].size()} }; // { {4, 8, 4}, { 4,8,16,8,4 },  };
+	vector<vector<int>> topologies = { { (int)inputs[0].size(),8,8,(int)targets[0].size()} }; // { {4, 8, 4}, { 4,8,16,8,4 },  };
 
-	Training* t = new Training(inputs, targets, learning_rates, topologies, 100);
+	Training* t = new Training(inputs, targets, learning_rates, topologies, 1000);
 	t->train_Network();
 
 

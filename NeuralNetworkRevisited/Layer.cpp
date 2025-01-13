@@ -74,9 +74,18 @@ Layer* Layer::feedForward(Matrix* Weights, Matrix* bias, bool isFirst, bool isLa
         this_layer_val = convertTOMatrixActivatedVal();
     }
 
-    Matrix* TransFormedMat = new Matrix(1, Weights->getNumCols(), false);
     Matrix* z = *this_layer_val * Weights;
     Matrix* zWithBias = *z + bias;
+
+    //cout << "Layer informations : " << endl;
+    //cout << " Is first layer : " << isFirst << endl;
+    //cout << " Is last layer : " << isLast << endl;
+    //cout << "Weight Matrix : " << endl;
+    //Weights->printToConsole();
+    //cout << "\nBias Matrix : " << endl;
+    //bias->printToConsole();
+    //cout << "Calculated Values : " << endl;
+    //z->printToConsole();
 
     // Put the Calculated Values in the Layer in form of vector rather then matrix
     if (!isLast) {
@@ -109,8 +118,6 @@ Layer* Layer::feedForward(Matrix* Weights, Matrix* bias, bool isFirst, bool isLa
         double maxVal = -INFINITY;
         for (const auto& neuron : temp->getNeurons())
             maxVal = maxVal > neuron->getVal() ? maxVal : neuron->getVal();; // Avoid overflow by normalizing with max
-
-        std::cout << maxVal << std::endl;
         vector<double> expVals(temp->getNeurons().size());
         for (size_t i = 0; i < temp->getNeurons().size(); i++)
             expVals[i] = exp(temp->getNeurons().at(i)->getVal() - maxVal);
@@ -121,14 +128,9 @@ Layer* Layer::feedForward(Matrix* Weights, Matrix* bias, bool isFirst, bool isLa
 
         for (size_t i = 0; i < temp->getNeurons().size(); i++) {
             temp->setActivatedVal(i, expVals[i] / sumExp);
-                
         }
-
-
-            // Normalize to get softmax values
-
-        
-            return temp;
+  
+        return temp;
         
     }
 
@@ -154,3 +156,8 @@ void Layer::setVal(int i, double v)
 void Layer::setActivatedVal(int index, double val) {
     this->neurons[index]->setActivatedVal(val);
 }
+
+//void Layer::setDerivedVal(int index, double val)
+//{
+//    this->neurons[index]->setDerivedVal(val);
+//}

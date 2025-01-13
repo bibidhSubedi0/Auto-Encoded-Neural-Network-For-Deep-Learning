@@ -40,7 +40,7 @@ void Neuron::Derive()
 void Neuron::ActivateFinal()
 {
     // Sigmoid activation function: 1 / (1 + exp(-x))
-    this->activatedVal = 1.0 / (1.0 + exp(-this->val));
+    this->activatedVal = 1.0 / (1.0 + exp(-1 * this->val));
     
 }
 
@@ -73,3 +73,5 @@ void Neuron::setActivatedVal(double val)
 {
     this->activatedVal = val;
 }
+
+

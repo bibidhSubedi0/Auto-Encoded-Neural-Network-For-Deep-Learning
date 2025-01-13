@@ -21,9 +21,9 @@ public:
     
 
     void setActivatedVal(double val); // LOLLL FUCK MY LIFE -> ISTG I NEED A SYSTEM DESGIN COURSE
-
+    
     // Getter
-    double getVal() { return this->val;}
+    double getVal() { return this->val; }
     double getActivatedVal() { return this->activatedVal; }
     double getDerivedVal() { return this->derivedVal; }
 

@@ -249,22 +249,32 @@ vector<Matrix*> Network::gardientComputation()
     int outputLayerIndex = this->topology.size() - 1;
     vector<Matrix*> allGradients;
 
+
     gradients = new Matrix(
         1,
         this->topology.at(outputLayerIndex),
         false);
-    DerivedValuesFromOtoH = this->layers.at(outputLayerIndex)->convertTOMatrixDerivedVal();
-    for (int i = 0; i < this->topology.at(outputLayerIndex); i++)
-    {
-        double e = this->errorDerivatives.at(i);
-        double y = DerivedValuesFromOtoH->getVal(0, i);
-        double g = e * y;
-        gradients->setVal(0, i, g);
+
+
+    
+    // As i am using softmax i need to deal with this differently ----------------
+    
+    
+    size_t n = this->layers.at(outputLayerIndex)->getNeurons().size();
+    vector<double> trueLabel = this->target;
+    for (size_t i = 0; i < n; i++) {
+        gradients->setVal(0, i, this->layers.at(outputLayerIndex)->getNeuron(i)->getActivatedVal() - trueLabel[i]);
     }
+
     Matrix* temp = new Matrix(1, this->topology.at(outputLayerIndex), false);
     allGradients.push_back(*temp + gradients);
 
-    delete DerivedValuesFromOtoH;
+
+    
+
+    // ----------------------------------------------------------------------------------
+    
+    
     for (int i = (outputLayerIndex - 1); i > 0; i--)
     {
         Matrix* t = new Matrix(1, topology.at(i), false);
@@ -473,6 +483,7 @@ void Network::updateWeights()
     this->weightMatrices.clear();
     reverse(newWeights.begin(), newWeights.end());
     weightMatrices = newWeights;
+
 }
 
 

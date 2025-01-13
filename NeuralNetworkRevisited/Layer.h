@@ -16,6 +16,7 @@ public:
     Layer(int size,bool last);
     void setVal(int index, double val);
     void setActivatedVal(int index, double val);
+    // void setDerivedVal(int index, double val);
 
     Matrix* convertTOMatrixVal();
     Matrix* convertTOMatrixActivatedVal();
