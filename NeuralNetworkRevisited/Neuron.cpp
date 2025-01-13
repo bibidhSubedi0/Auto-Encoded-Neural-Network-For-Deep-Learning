@@ -68,3 +68,8 @@ void Neuron::DeriveFinal()
 //    for (size_t i = 0; i < neurons.size(); i++)
 //        neurons[i].activatedVal = expVals[i] / sumExp;
 //}
+
+void Neuron::setActivatedVal(double val)
+{
+    this->activatedVal = val;
+}

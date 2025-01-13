@@ -1,4 +1,6 @@
 #include "TotalNetwork.h"
+#include <numeric>
+
 using namespace std;
 
 Layer::Layer(int size)
@@ -92,15 +94,42 @@ Layer* Layer::feedForward(Matrix* Weights, Matrix* bias, bool isFirst, bool isLa
     }
     else // Last ho vane
     {   
-        Layer* temp = new Layer(Weights->getNumCols(),1);
 
+
+
+        // Last ho vane apply softmax instead of this.......................
+        Layer* temp = new Layer(Weights->getNumCols(),1);
         for (int i = 0; i < Weights->getNumCols(); i++)
         {
             temp->setVal(i, zWithBias->getVal(0, i));
-            temp->getNeuron(i)->ActivateFinal();
-            temp->getNeuron(i)->DeriveFinal();
         }
-        return temp;
+
+        // Compute exponentials and their sum
+
+        double maxVal = -INFINITY;
+        for (const auto& neuron : temp->getNeurons())
+            maxVal = maxVal > neuron->getVal() ? maxVal : neuron->getVal();; // Avoid overflow by normalizing with max
+
+        std::cout << maxVal << std::endl;
+        vector<double> expVals(temp->getNeurons().size());
+        for (size_t i = 0; i < temp->getNeurons().size(); i++)
+            expVals[i] = exp(temp->getNeurons().at(i)->getVal() - maxVal);
+
+        double sumExp = std::accumulate(expVals.begin(), expVals.end(), 0.0);
+
+
+
+        for (size_t i = 0; i < temp->getNeurons().size(); i++) {
+            temp->setActivatedVal(i, expVals[i] / sumExp);
+                
+        }
+
+
+            // Normalize to get softmax values
+
+        
+            return temp;
+        
     }
 
 }
@@ -120,4 +149,8 @@ vector<Neuron*> Layer::getNeurons()
 void Layer::setVal(int i, double v)
 {
     this->neurons[i]->setVal(v);
+}
+
+void Layer::setActivatedVal(int index, double val) {
+    this->neurons[index]->setActivatedVal(val);
 }
